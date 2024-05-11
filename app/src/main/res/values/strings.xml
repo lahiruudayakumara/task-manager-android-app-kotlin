@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Task Manager App</string>
+    <string name="important">IMPORTANT</string>
+    <string name="to_do">TO DO</string>
+    <string name="description">Accomplish your daily task and we help you keep track of your growth</string>
+    <string name="head">Complete your daily task!</string>
+    <string name="your_task">Your Task</string>
+    <string name="task_description">Task Description</string>
+    <string name="time">HH:mm</string>
+    <string name="date">Pick Time</string>
+    <string name="submit">Submit</string>
+    <string name="back">Back</string>
+    <string name="meeting">MEETING</string>
+    <string name="pending">Pending</string>
 </resources>
