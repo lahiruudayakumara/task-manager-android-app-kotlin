@@ -12,4 +12,9 @@
     <string name="back">Back</string>
     <string name="meeting">MEETING</string>
     <string name="pending">Pending</string>
+    <string name="profile">Profile</string>
+    <string name="completed_task">Completed Task</string>
+    <string name="search">Search</string>
+    <string name="yyyy_mm_dd">yyyy-MM-dd</string>
+    <string name="pick_date">Pick Date</string>
 </resources>
