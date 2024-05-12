@@ -37,7 +37,7 @@ class UpdateTaskActivity : AppCompatActivity() {
 
     private var selectedDate: String = ""
     private var selectedTime: String = ""
-    private var status: String = "Pending"
+    private var status: String = ""
 
     private lateinit var checkBoxPending: CheckBox
     private lateinit var checkBoxInProgress: CheckBox
@@ -63,6 +63,8 @@ class UpdateTaskActivity : AppCompatActivity() {
         etDate = findViewById(R.id.display_edit_date)
         etTime = findViewById(R.id.display_edit_time)
 
+        calendar = Calendar.getInstance()
+
         val titleOld = intent.getStringExtra(COLUMN_NAME_TITLE)
         val descriptionOld = intent.getStringExtra(COLUMN_NAME_DESCRIPTION)
         val datepre = intent.getStringExtra(COLUMN_NAME_DATE)
@@ -72,45 +74,11 @@ class UpdateTaskActivity : AppCompatActivity() {
         etDate.text = datepre
         etTime.text = timepre
 
-        if (statusOld != null) {
-            if (statusOld == "Pending") {
-                checkBoxPending.isChecked = true
-                status = "Pending"
-            } else if (statusOld == "In Progress") {
-                checkBoxInProgress.isChecked = true
-                status = "In Progress"
-            } else if (statusOld == "Done") {
-                checkBoxDone.isChecked = true
-                status = "Done"
-            }
-        } else {
-            // Handle the case where statusOld is null
-            Log.d("UpdateTaskActivity", "Status from intent is null")
-        }
+        setStatusCheckBoxes(statusOld)
 
-        checkBoxPending.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                status = "Pending"
-                checkBoxInProgress.isChecked = false
-                checkBoxDone.isChecked = false
-            }
-        }
-
-        checkBoxInProgress.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                status = "In Progress"
-                checkBoxPending.isChecked = false
-                checkBoxDone.isChecked = false
-            }
-        }
-
-        checkBoxDone.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                status = "Done"
-                checkBoxPending.isChecked = false
-                checkBoxInProgress.isChecked = false
-            }
-        }
+        checkBoxPending.setOnCheckedChangeListener { _, isChecked -> setStatus(isChecked, "Pending") }
+        checkBoxInProgress.setOnCheckedChangeListener { _, isChecked -> setStatus(isChecked, "In Progress") }
+        checkBoxDone.setOnCheckedChangeListener { _, isChecked -> setStatus(isChecked, "Done") }
 
         calendar = Calendar.getInstance()
         datepre?.let {
@@ -167,6 +135,34 @@ class UpdateTaskActivity : AppCompatActivity() {
 
         fabDelete.setOnClickListener {
             deleteTask()
+        }
+    }
+
+    private fun setStatusCheckBoxes(statusOld: String?) {
+        when (statusOld) {
+            "Pending" -> checkBoxPending.isChecked = true
+            "In Progress" -> checkBoxInProgress.isChecked = true
+            "Done" -> checkBoxDone.isChecked = true
+        }
+    }
+
+    private fun setStatus(isChecked: Boolean, newStatus: String) {
+        if (isChecked) {
+            status = newStatus
+            when (newStatus) {
+                "Pending" -> {
+                    checkBoxInProgress.isChecked = false
+                    checkBoxDone.isChecked = false
+                }
+                "In Progress" -> {
+                    checkBoxPending.isChecked = false
+                    checkBoxDone.isChecked = false
+                }
+                "Done" -> {
+                    checkBoxPending.isChecked = false
+                    checkBoxInProgress.isChecked = false
+                }
+            }
         }
     }
 
@@ -256,12 +252,12 @@ class UpdateTaskActivity : AppCompatActivity() {
     }
 
     private fun updateDateTextView() {
-        etDate = findViewById(R.id.display_data)
+        etDate = findViewById(R.id.display_edit_date)
         etDate.text = "$selectedDate"
     }
 
     private fun updateTimeTextView() {
-        etTime = findViewById(R.id.display_time)
+        etTime = findViewById(R.id.display_edit_time)
         etTime.text = "$selectedTime"
     }
 
