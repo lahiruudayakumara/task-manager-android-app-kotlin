@@ -97,12 +97,76 @@ class DBOpenHelper(context: Context) : SQLiteOpenHelper(
         return notesList
     }
 
+    fun readTaskCount(status: String, priority: String): Int {
+        val db = this.readableDatabase
+        val cursorTask: Cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_NAME WHERE TaskStatus = ? AND TaskPriority = ?", arrayOf(status, priority))
+        var count = 0
+
+        if (cursorTask.moveToFirst()) {
+            count = cursorTask.getInt(0)
+        }
+        cursorTask.close()
+        return count
+    }
+
+    fun readTaskByStatus(status: String): MutableList<TaskModel> {
+        val db = this.readableDatabase
+        val cursorTask: Cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE TaskStatus = ?", arrayOf(status))
+        val notesList: MutableList<TaskModel> = mutableListOf()
+
+        if (cursorTask.moveToFirst()) {
+            do {
+                Log.d("DPOpenHelper", cursorTask.getString(0))
+                notesList.add(
+                    TaskModel(
+                        cursorTask.getInt(0),
+                        cursorTask.getString(1),
+                        cursorTask.getString(2),
+                        cursorTask.getString(3),
+                        cursorTask.getString(4),
+                        cursorTask.getString(5),
+                        cursorTask.getString(6),
+                    )
+                )
+            } while (cursorTask.moveToNext())
+        }
+        cursorTask.close()
+        return notesList
+    }
+
+
+    fun readTaskByDate(status: String, selectDate: String): MutableList<TaskModel> {
+        val db = this.readableDatabase
+        val cursorTask: Cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE TaskStatus = ? AND TaskDate = ?", arrayOf(status, selectDate))
+        val notesList: MutableList<TaskModel> = mutableListOf()
+
+        if (cursorTask.moveToFirst()) {
+            do {
+                Log.d("DPOpenHelper", cursorTask.getString(0))
+                notesList.add(
+                    TaskModel(
+                        cursorTask.getInt(0),
+                        cursorTask.getString(1),
+                        cursorTask.getString(2),
+                        cursorTask.getString(3),
+                        cursorTask.getString(4),
+                        cursorTask.getString(5),
+                        cursorTask.getString(6)
+                    )
+                )
+            } while (cursorTask.moveToNext())
+        }
+        cursorTask.close()
+        return notesList
+    }
+
     fun updateTask(
         id: String,
         title: String,
         description: String,
         selectedDate: String,
-        selectedTime: String
+        selectedTime: String,
+        status: String
     ) {
 
         val db = this.writableDatabase
