@@ -8,14 +8,17 @@ import android.provider.BaseColumns
 import android.text.Editable
 import android.util.Log
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.taskmanagerapp.db.DBOpenHelper
 import com.example.taskmanagerapp.utils.COLUMN_NAME_DATE
 import com.example.taskmanagerapp.utils.COLUMN_NAME_DESCRIPTION
+import com.example.taskmanagerapp.utils.COLUMN_NAME_STATUS
 import com.example.taskmanagerapp.utils.COLUMN_NAME_TIME
 import com.example.taskmanagerapp.utils.COLUMN_NAME_TITLE
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -25,8 +28,21 @@ class UpdateTaskActivity : AppCompatActivity() {
 
     private lateinit var etUpdatedTitle: TextInputLayout
     private lateinit var etUpdatedDescription: TextInputLayout
-    private lateinit var fabUpdate: FloatingActionButton
+    private lateinit var fabUpdate: ImageButton
+    private lateinit var fabDelete: ImageButton
+    private lateinit var backToMain: ImageButton
     private lateinit var calendar: Calendar
+    private lateinit var etDate: TextView
+    private lateinit var etTime: TextView
+
+    private var selectedDate: String = ""
+    private var selectedTime: String = ""
+    private var status: String = "Pending"
+
+    private lateinit var checkBoxPending: CheckBox
+    private lateinit var checkBoxInProgress: CheckBox
+    private lateinit var checkBoxDone: CheckBox
+
     private val dbOpenHelper = DBOpenHelper(this)
 
 
@@ -37,11 +53,64 @@ class UpdateTaskActivity : AppCompatActivity() {
         etUpdatedTitle = findViewById(R.id.edit_title)
         etUpdatedDescription = findViewById(R.id.edit_description)
         fabUpdate = findViewById(R.id.fab_update)
+        backToMain = findViewById(R.id.fab_back_main)
+        fabDelete = findViewById(R.id.fab_delete)
+
+        checkBoxPending = findViewById(R.id.edit_pending)
+        checkBoxInProgress = findViewById(R.id.edit_in_progress)
+        checkBoxDone = findViewById(R.id.edit_done)
+
+        etDate = findViewById(R.id.display_edit_date)
+        etTime = findViewById(R.id.display_edit_time)
 
         val titleOld = intent.getStringExtra(COLUMN_NAME_TITLE)
         val descriptionOld = intent.getStringExtra(COLUMN_NAME_DESCRIPTION)
         val datepre = intent.getStringExtra(COLUMN_NAME_DATE)
         val timepre = intent.getStringExtra(COLUMN_NAME_TIME)
+        val statusOld = intent.getStringExtra(COLUMN_NAME_STATUS)
+
+        etDate.text = datepre
+        etTime.text = timepre
+
+        if (statusOld != null) {
+            if (statusOld == "Pending") {
+                checkBoxPending.isChecked = true
+                status = "Pending"
+            } else if (statusOld == "In Progress") {
+                checkBoxInProgress.isChecked = true
+                status = "In Progress"
+            } else if (statusOld == "Done") {
+                checkBoxDone.isChecked = true
+                status = "Done"
+            }
+        } else {
+            // Handle the case where statusOld is null
+            Log.d("UpdateTaskActivity", "Status from intent is null")
+        }
+
+        checkBoxPending.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                status = "Pending"
+                checkBoxInProgress.isChecked = false
+                checkBoxDone.isChecked = false
+            }
+        }
+
+        checkBoxInProgress.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                status = "In Progress"
+                checkBoxPending.isChecked = false
+                checkBoxDone.isChecked = false
+            }
+        }
+
+        checkBoxDone.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                status = "Done"
+                checkBoxPending.isChecked = false
+                checkBoxInProgress.isChecked = false
+            }
+        }
 
         calendar = Calendar.getInstance()
         datepre?.let {
@@ -60,12 +129,12 @@ class UpdateTaskActivity : AppCompatActivity() {
             calendar.set(Calendar.MINUTE, minute)
         }
 
-        val btnPickDate = findViewById<Button>(R.id.btn_pick_date)
+        val btnPickDate = findViewById<Button>(R.id.btn_edit_pick_date)
         btnPickDate.setOnClickListener {
             showDatePicker()
         }
 
-        val btnPickTime = findViewById<Button>(R.id.btn_pick_time)
+        val btnPickTime = findViewById<Button>(R.id.btn_edit_pick_time)
         btnPickTime.setOnClickListener {
             showTimePicker()
         }
@@ -78,18 +147,26 @@ class UpdateTaskActivity : AppCompatActivity() {
             etUpdatedDescription.editText?.text =
                 Editable.Factory.getInstance().newEditable(descriptionOld)
 
-            Log.d("UpdateNoteActivity", titleOld.toString())
-            Log.d("UpdateNoteActivity", descriptionOld.toString())
-            Log.d("UpdateNoteActivity", datepre.toString())
-            Log.d("UpdateNoteActivity", timepre.toString())
+            Log.d("UpdateTaskActivity", titleOld.toString())
+            Log.d("UpdateTaskActivity", descriptionOld.toString())
+            Log.d("UpdateTaskActivity", datepre.toString())
+            Log.d("UpdateTaskActivity", timepre.toString())
         } else {
-            Log.d("UpdateNoteActivity", "value was null")
+            Log.d("UpdateTaskActivity", "value was null")
             Toast.makeText(this, "Value was null", Toast.LENGTH_SHORT).show()
         }
 
 
         fabUpdate.setOnClickListener {
             updateData()
+        }
+
+        backToMain.setOnClickListener {
+            fabBackToMain()
+        }
+
+        fabDelete.setOnClickListener {
+            deleteTask()
         }
     }
 
@@ -98,6 +175,8 @@ class UpdateTaskActivity : AppCompatActivity() {
             this,
             { _, year, monthOfYear, dayOfMonth ->
                 calendar.set(year, monthOfYear, dayOfMonth)
+                selectedDate = SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
+                updateDateTextView()
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -112,6 +191,8 @@ class UpdateTaskActivity : AppCompatActivity() {
             { _, hourOfDay, minute ->
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 calendar.set(Calendar.MINUTE, minute)
+                selectedTime = SimpleDateFormat("HH:mm").format(calendar.time)
+                updateTimeTextView()
             },
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
@@ -135,8 +216,8 @@ class UpdateTaskActivity : AppCompatActivity() {
             etUpdatedDescription.requestFocus()
             return
         }
-        val selectedDate = SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
-        val selectedTime = SimpleDateFormat("HH:mm").format(calendar.time)
+        selectedDate = SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
+        selectedTime = SimpleDateFormat("HH:mm").format(calendar.time)
         if (notEmpty()) {
 
             dbOpenHelper.updateTask(
@@ -144,7 +225,8 @@ class UpdateTaskActivity : AppCompatActivity() {
                 etUpdatedTitle.editText?.text.toString(),
                 etUpdatedDescription.editText?.text.toString(),
                 selectedDate,
-                selectedTime
+                selectedTime,
+                status
             )
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
             val intentToMainActivity = Intent(this, MainActivity::class.java)
@@ -157,6 +239,30 @@ class UpdateTaskActivity : AppCompatActivity() {
     private fun notEmpty(): Boolean {
         return (etUpdatedTitle.editText?.text.toString().isNotEmpty()
                 && etUpdatedDescription.editText?.text.toString().isNotEmpty())
+    }
+
+    private fun deleteTask() {
+        val id = intent.getIntExtra(BaseColumns._ID, 0).toString()
+        dbOpenHelper.deleteTask(id)
+        Toast.makeText(this, "Deleted!", Toast.LENGTH_SHORT).show()
+        val intentToMainActivity = Intent(this, MainActivity::class.java)
+        startActivity(intentToMainActivity)
+        finish()
+    }
+
+    private fun fabBackToMain() {
+        val intentToMainActivity = Intent(this, MainActivity::class.java)
+        startActivity(intentToMainActivity)
+    }
+
+    private fun updateDateTextView() {
+        etDate = findViewById(R.id.display_data)
+        etDate.text = "$selectedDate"
+    }
+
+    private fun updateTimeTextView() {
+        etTime = findViewById(R.id.display_time)
+        etTime.text = "$selectedTime"
     }
 
 }

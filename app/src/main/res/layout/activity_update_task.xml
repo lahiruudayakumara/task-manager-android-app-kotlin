@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="LAHIRU!"
+        android:text="Quickly update task progress status"
         android:textColor="#777777"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -120,7 +120,7 @@
             app:tint="@color/black" />
 
         <TextView
-            android:id="@+id/display_data"
+            android:id="@+id/display_edit_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -166,7 +166,7 @@
             app:tint="@color/black"/>
 
         <TextView
-            android:id="@+id/display_time"
+            android:id="@+id/display_edit_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -188,16 +188,33 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageButton
-        android:id="@+id/fab_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/fab_back_main"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
         android:layout_margin="24dp"
         android:background="@drawable/circle_background"
         android:backgroundTint="@color/orange"
         android:contentDescription="@string/back"
-        android:src="@drawable/ic_baseline_send_24"
+        android:src="@drawable/backward_arrow"
+        android:scaleType="fitXY"
+        android:padding="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/fab_delete"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:layout_margin="24dp"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="@color/orange"
+        android:contentDescription="@string/back"
+        android:src="@drawable/delete"
+        android:scaleType="fitXY"
+        android:padding="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fab_update"
+        app:layout_constraintStart_toEndOf="@+id/fab_back_main" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -205,33 +222,34 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/fab_send"
+        app:layout_constraintBottom_toTopOf="@+id/fab_update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
         <CheckBox
-            android:id="@+id/important"
+            android:id="@+id/edit_pending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Important"
+            android:text="Pending"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/orange"/>
+
+        <CheckBox
+            android:id="@+id/edit_in_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In Progress"
+            app:layout_constraintEnd_toStartOf="@+id/edit_done"
+            app:layout_constraintStart_toEndOf="@+id/edit_pending"
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
-            android:id="@+id/to_do"
+            android:id="@+id/edit_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="To Do"
-            app:layout_constraintEnd_toStartOf="@+id/meeting"
-            app:layout_constraintStart_toEndOf="@+id/important"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <CheckBox
-            android:id="@+id/meeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Meeting"
+            android:text="Done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -239,12 +257,14 @@
 
     <ImageButton
         android:id="@+id/fab_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
         android:layout_margin="24dp"
         android:background="@drawable/circle_background"
         android:backgroundTint="@color/orange"
         android:contentDescription="@string/submit"
+        android:padding="12sp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_baseline_send_24"
         app:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
