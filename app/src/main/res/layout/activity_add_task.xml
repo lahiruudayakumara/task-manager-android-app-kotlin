@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="LAHIRU!"
+        android:text="Swiftly add new tasks"
         android:textColor="#777777"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -191,13 +191,15 @@
 
     <ImageButton
         android:id="@+id/fab_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
         android:layout_margin="24dp"
+        android:padding="12sp"
         android:background="@drawable/circle_background"
         android:backgroundTint="@color/orange"
         android:contentDescription="@string/back"
-        android:src="@drawable/ic_baseline_send_24"
+        android:src="@drawable/backward_arrow"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -241,12 +243,14 @@
 
     <ImageButton
         android:id="@+id/fab_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
         android:layout_margin="24dp"
         android:background="@drawable/circle_background"
         android:backgroundTint="@color/orange"
         android:contentDescription="@string/submit"
+        android:padding="12sp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_baseline_send_24"
         app:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

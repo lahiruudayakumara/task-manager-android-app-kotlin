@@ -28,7 +28,7 @@ class AddTaskActivity : AppCompatActivity() {
 
     private var selectedDate: String = ""
     private var selectedTime: String = ""
-    private var priority: String = ""
+    private var priority: String = "Important"
     private var status: String = "Pending"
 
     private lateinit var checkBoxImportant: CheckBox
