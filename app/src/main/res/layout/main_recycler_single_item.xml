@@ -4,18 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/mainCardView"
     android:layout_margin="8dp"
     android:elevation="12dp"
-    app:cardCornerRadius="24dp"
+    app:cardCornerRadius="5dp"
     app:cardBackgroundColor="@color/white"
     app:strokeWidth="1dp">
+<!--    android:onClick="onCardClick"-->
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -31,8 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Title"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="I am Description"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -54,9 +56,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/orange"
+                android:background="@drawable/rounded_background"
                 android:text="IN PROGRESS"
-                android:padding="2sp"
+                android:paddingStart="5sp"
+                android:paddingEnd="5sp"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_description"
@@ -84,13 +88,13 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_marginStart="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_popup_disk_full" />
+            app:srcCompat="@drawable/notes_notebook" />
 
 <!--        <Button-->
 <!--            android:id="@+id/btn_edit"-->
