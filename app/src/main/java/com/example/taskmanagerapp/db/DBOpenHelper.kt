@@ -160,6 +160,31 @@ class DBOpenHelper(context: Context) : SQLiteOpenHelper(
         return notesList
     }
 
+    fun readTaskByOnlyDate(selectDate: String): MutableList<TaskModel> {
+        val db = this.readableDatabase
+        val cursorTask: Cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE TaskDate = ?", arrayOf(selectDate))
+        val notesList: MutableList<TaskModel> = mutableListOf()
+
+        if (cursorTask.moveToFirst()) {
+            do {
+                Log.d("DPOpenHelper", cursorTask.getString(0))
+                notesList.add(
+                    TaskModel(
+                        cursorTask.getInt(0),
+                        cursorTask.getString(1),
+                        cursorTask.getString(2),
+                        cursorTask.getString(3),
+                        cursorTask.getString(4),
+                        cursorTask.getString(5),
+                        cursorTask.getString(6)
+                    )
+                )
+            } while (cursorTask.moveToNext())
+        }
+        cursorTask.close()
+        return notesList
+    }
+
     fun updateTask(
         id: String,
         title: String,
@@ -175,6 +200,7 @@ class DBOpenHelper(context: Context) : SQLiteOpenHelper(
             put(COLUMN_NAME_DESCRIPTION, description)
             put(COLUMN_NAME_DATE,selectedDate)
             put(COLUMN_NAME_TIME,selectedTime)
+            put(COLUMN_NAME_STATUS, status)
         }
         try {
             db?.update(TABLE_NAME, values, "_id = ?", arrayOf(id))
