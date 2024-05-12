@@ -14,6 +14,21 @@
         android:theme="@style/Theme.TaskManagerApp"
         tools:ignore="ExtraText">
         <activity
+            android:name=".DoneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InProgressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
